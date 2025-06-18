@@ -3,6 +3,7 @@ sys.path.append(os.path.abspath('.'))
 import random
 from Modules import read_city_codes
 from DataSets.Array import Array
+from DataSets.Trie import Trie
 
 class User:
     def __init__(self,fname="",lname="",ncode="",password=''):
@@ -12,6 +13,7 @@ class User:
         self.lastname = lname
         self.password = password
         self.cars = None
+        self.users_database = Trie()
         
     def license_plate_generator(self , cityname ):
         all_city_codes = read_city_codes()
@@ -37,8 +39,7 @@ class User:
             
             new_plate = f'{city_code}{letter}{strnumbers}'
             
-    def _is_valid_plate_nummber(self , number):
-        print(number)
+    def _is_valid_plate_nummber(self , number , letter):
         if self._has_repeated_digit(number) == 5:
             return False
         
@@ -46,21 +47,28 @@ class User:
         strnumber = str(number)
         ascendig_flag = True
         for i in range(len(strnumber) - 1):
-            if strnumber[i+1] != int(strnumber[i]) + 1:
+            if int(strnumber[i+1]) != int(strnumber[i]) + 1:
                 ascendig_flag = False
                 break
-            print(ascendig_flag)
+            
         if ascendig_flag:
             return False
         #barresi nozooli boodan
         descendinf_flag = True
         for i in range(len(strnumber) - 1):
-            if strnumber[i+1] != int(strnumber[i]) - 1:
+            if int(strnumber[i+1]) != int(strnumber[i]) - 1:
                 descendinf_flag = False
                 break
         if descendinf_flag:
             return False
         
+        if letter == 'X':
+            for digit in number:
+                if int(digit) % 2 == 0:
+                    return False
+        
+        return True
+    
     def _has_repeated_digit(self,number):
         number = str(number)
         count = 0
@@ -72,5 +80,5 @@ class User:
                     break
         return count
 
-user= User()
-print(user._is_valid_plate_nummber(123456))
+    def User_login(self, id , password):
+        
