@@ -1,11 +1,4 @@
-<<<<<<< HEAD
-import random
-from Modules import read_city_codes
-from DataSets.Array import Array
 
-class User:
-    def __init__(self,fname,lname,ncode,password):
-=======
 import sys , os , re
 sys.path.append(os.path.abspath('.'))
 import random
@@ -18,23 +11,14 @@ from DataSets.HashTable import OpenHashTable
 
 class User:
     def __init__(self,fname="",lname="",ncode="",password=''):
->>>>>>> first
         self.id = ncode
         self.ncode = ncode
         self.name = fname
         self.lastname = lname
         self.password = password
         self.cars = None
-<<<<<<< HEAD
-        
-    def license_plate_generator(self , cityname ):
-=======
-        self.users_database = Trie()
-        self.plates_database = HashTable()
-        self.cars_database = OpenHashTable()
         
     def license_plate_generator(self , cityname , id ):
->>>>>>> first
         all_city_codes = read_city_codes()
         city_code = all_city_codes.search(cityname)
         if not city_code:
@@ -47,11 +31,9 @@ class User:
         valid_number_flag = False
         attempted_numbers_counter = 0
         while not valid_number_flag and attempted_numbers_counter <6:
-<<<<<<< HEAD
-            temp = ''.join(random.choic('0123456789' , k = 5))
-=======
+
             temp = ''.join(random.choice('0123456789' , k = 5))
->>>>>>> first
+
             if self._is_valid_plate_nummber(temp , letter):
                 strnumbers = temp
                 valid_number_flag = True
@@ -59,13 +41,6 @@ class User:
         
             if not valid_number_flag:
                 continue
-            
-<<<<<<< HEAD
-            new_plate = f'{city_code}{letter}{strnumbers}'
-            
-    def _is_valid_plate_nummber(self):
-        pass
-=======
             # new_plate = f'{city_code}{letter}{strnumbers}
             new_plate = f'{temp[:2]}{letter}{temp[2:5]}-{city_code}'
             plate_object = LicencePlste(new_plate , id)
@@ -178,4 +153,3 @@ class User:
 user = User()
 # user.user_login()
 # u.insert(number, data)ser._password_hash_function('mahsa')
->>>>>>> first
