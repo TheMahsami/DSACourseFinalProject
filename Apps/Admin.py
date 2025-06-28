@@ -1,5 +1,6 @@
-import random , re
-from DataSets.HashTable import OpenHashTable
+import random , re , sys  , os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__) , '..')))
+from DataSets.HashTable import *
 from DataSets.Trie import Trie
 import Car
 
@@ -13,15 +14,15 @@ class Admin:
     def plate_a_car(self , plate_number , id):
 
             car_color = input('inter your car color: ')
-            if car_color.islower() == 'white':
+            if car_color.lower() == 'white':
                 car_color = 'WT'
-            elif car_color.islower() == 'black':
+            elif car_color.lower() == 'black':
                 car_color = 'BC'
-            elif car_color.islower() == 'red':
+            elif car_color.lower() == 'red':
                 car_color = 'RD'
-            elif car_color.islower() == 'blue':
+            elif car_color.lower() == 'blue':
                 car_color = 'BL'
-            elif car_color.islower() == 'silver':
+            elif car_color.lower() == 'silver':
                 car_color = ' GR'
                 
             else:
@@ -35,7 +36,7 @@ class Admin:
                 else:
                     return ' wrong format for plate number plz try agin in form NNLNNN'
             
-            car_id = ''.join(random.choice('0123456789' , k = 5))
+            car_id = ''.join(random.choices('0123456789' , k = 5))
             while True:
                 production_date = input("inter the prodoction year of your car: ")
                 plated_date = input('inter todays date(yyyy/mm/dd): ')
@@ -48,6 +49,19 @@ class Admin:
                         return ' plated year can not before product year'
                 except(ValueError):
                     return 'invalid date format. try yyy/mm/dd'
-            car_object = Car(car_color , car_name , production_date , car_id , plate_number , plated_date , id)
+            car_object = Car.Car(car_color , car_name , production_date , car_id , plate_number , plated_date , id)
             self.cars_database.Insert(car_id , car_object)
             return 'car added succesfully'
+        
+    def show_all_cars(self):
+        for data in self.cars_database.Traverse():
+            print(data)
+            
+    def show_all_users(self):
+        for data in self.users_database.Traverse():
+            print(data)
+        
+# admin = Admin()
+
+# admin.plate_a_car('33d754-76' , '1274437280')
+# admin.show_all_cars()
