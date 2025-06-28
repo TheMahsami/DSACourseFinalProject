@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+#for users
+>>>>>>> first
 class TrieNode:
     def __init__(self):
         self.child = 10 * [None]
@@ -35,11 +39,21 @@ class Trie:
         for digit in strid:
             index = int(digit)
             if curr.child[index] is None:
+<<<<<<< HEAD
                 return False
             
             curr = curr.child[index]
              
         return curr.IsEnd
+=======
+                return None
+            #return none ha dar soorari hast ke chizi peyda nashavad
+            curr = curr.child[index]
+        if curr.IsEnd is True:
+            return curr.data
+        else:
+            return None
+>>>>>>> first
     
     def _recursive_traverse(self, node , prefix):
         if node is None:

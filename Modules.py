@@ -19,4 +19,7 @@ def read_city_codes(filepath='tests/citycode.txt'):
             if cityname and citycoded:
                 city_codes.insert(citycoded , cityname)
     return city_codes
+<<<<<<< HEAD
 read_city_codes()
+=======
+>>>>>>> first

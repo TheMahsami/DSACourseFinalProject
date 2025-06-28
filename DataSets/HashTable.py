@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+#for cars
+>>>>>>> first
 class OpenHashTable:
     def __init__(self , capacity=10):
         self.capacity = capacity
@@ -35,7 +39,11 @@ class OpenHashTable:
         if self.size / self.capacity >= 0.7:
             self._resize()
             
+<<<<<<< HEAD
         index = self._probing(key)
+=======
+        index = self._probing(int(key))
+>>>>>>> first
         if self.table[index] is None:
             self.table[index] = (key , value)
             self.size +=1
