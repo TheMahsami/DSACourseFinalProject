@@ -1,7 +1,6 @@
-<<<<<<< HEAD
-=======
+
 #for cars
->>>>>>> first
+
 class OpenHashTable:
     def __init__(self , capacity=10):
         self.capacity = capacity
@@ -10,7 +9,7 @@ class OpenHashTable:
         self.size = 0
         
     def _hash(self,key):
-        return key % self.capacity
+        return int(key) % self.capacity
     
     def _resize(self):
         old_table = self.table
@@ -39,11 +38,8 @@ class OpenHashTable:
         if self.size / self.capacity >= 0.7:
             self._resize()
             
-<<<<<<< HEAD
-        index = self._probing(key)
-=======
+
         index = self._probing(int(key))
->>>>>>> first
         if self.table[index] is None:
             self.table[index] = (key , value)
             self.size +=1
@@ -51,16 +47,16 @@ class OpenHashTable:
         
     
     def Delete(self , key):
-        index = self._probing(key)
+        index = self._probing(int(key))
         if self.table[index] is None or self.table[index] == 'DELETED':
             raise KeyError("key not founded!")
         
         self.table[index] = 'DELETED'
-        self.size -+ 1
+        self.size -= 1
         return f'key {key} deleted from table successfully'
     
     def Search(self,key):
-        index = self._probing(key)
+        index = self._probing(int(key))
         if self.table[index] is None or self.table[index] == 'DELETED':
             raise KeyError(f'key {key} not founded!')
         
