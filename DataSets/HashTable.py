@@ -36,7 +36,7 @@ class OpenHashTable:
         if self.size / self.capacity >= 0.7:
             self._resize()
             
-        index = self._probing(key)
+        index = self._probing(int(key))
         if self.table[index] is None:
             self.table[index] = (key , value)
             self.size +=1
