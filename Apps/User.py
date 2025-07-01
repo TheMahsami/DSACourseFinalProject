@@ -16,7 +16,9 @@ class User:
         self.name = fname
         self.lastname = lname
         self.password = password
-        self.cars = None
+        self.car_database = OpenHashTable()
+        self.users_database = Trie()
+        self.plstes_database = HashTable()
         
     def license_plate_generator(self , cityname , id ):
         all_city_codes = read_city_codes()
@@ -144,12 +146,18 @@ class User:
         self.users_database.Insert(ncode, user_data)
         return f'user {ncode} added successfully'
     
-    # def user_cars(self , id):
-    #     for item in self.cars_database:
-    #         if item is None or item is :
-    #             continue
-    #         for item.ownership_history()
-        
+    def show_user_cars(self , id):
+        for item in self.car_database.Traverse():
+            key , car = item
+            if car.owner_is == id:
+                print(car)
+                
+    def show_user_platelicenses(self , id):
+        for bst in self.plstes_database.table:
+            if bst is not None:
+                for node in bst.traverse(bst.root):
+                    if node.data.owner == id:
+                        print(node.data)
 user = User()
 # user.user_login()
 # u.insert(number, data)ser._password_hash_function('mahsa')
