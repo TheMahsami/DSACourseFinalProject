@@ -58,4 +58,10 @@ class Trie:
     def Traverse(self):
         
         yield from self._recursive_traverse(self.root , '')
-        
+
+
+
+# user = Trie()
+# user.Insert('1274437180' , 'data1')
+# for data in user.Traverse():
+#     print(data)

@@ -1,3 +1,5 @@
+import sys , os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__) , '..')))
 from DataSets.Array import Array
 class Car:
     def __init__(self , car_color , car_name , production_yaer , car_id , plate_number , plated_date , owner_id):
@@ -8,7 +10,6 @@ class Car:
         self.plate_number = plate_number
         self.plated_date = plated_date
         self.owner_id = owner_id
-        self.ownership_history = Array()
         
         
     def write_to_array():

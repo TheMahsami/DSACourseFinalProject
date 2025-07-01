@@ -62,7 +62,8 @@ class OpenHashTable:
         
         return self.table[index][1]
     
-    def Traverce(self):
+    def Traverse(self):
         for item in self.table:
             if item is not None and item != 'DELETED':
                 yield item
+                
