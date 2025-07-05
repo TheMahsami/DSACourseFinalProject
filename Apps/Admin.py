@@ -5,14 +5,14 @@ from DataSets.Trie import Trie
 import Car
 from DataSets.BSTHash import HashTable
 from DataSets.Array import Array
-from Modules import read_city_codes , read_cars
+from Modules import read_city_codes , read_cars , read_users
 
 class Admin:
     def __init__(self):
         self.usename = 'admin'
         self.password = 'admin'
         self.cars_database = read_cars()
-        self.users_database = Trie()
+        self.users_database = read_users()
         self.plates_database = HashTable()
         self.citycodes_database = read_city_codes()
         
@@ -66,20 +66,23 @@ class Admin:
     def show_all_users(self):
         for data in self.users_database.Traverse():
             print(data)
-            
+    # tool       
     def _get_citycode_from_plate_number(self , number):
         citycode = number.split('-')[1]
         
-    def show_plates_of_a_city(self , city_name):
+    def _get_citycode_from_cityname(self , cityname):
         city_code = None
         try:
-            # print(self.citycodes_database.MainArray[11])
             for i in range(len(self.citycodes_database.MainArray)):
                 if self.citycodes_database.MainArray[i] is not None:
-                    if self.citycodes_database.MainArray[i] == city_name.capitalize():
+                    if self.citycodes_database.MainArray[i] == cityname.capitalize():
                         city_code = i
+            return city_code
         except:
-            return 'city not founded!'  
+            raise Exception('city not founded')
+        
+    def show_plates_of_a_city(self , city_name):
+        city_code = self._get_citycode_from_cityname(city_name)
         
         index = self.plates_database._hash_function(city_code)
         bst = self.plates_database.table[index]
@@ -88,15 +91,13 @@ class Admin:
                 print(node.data)
                 
     def show_cars_of_a_city(self , city_name):
-        #to find citycode by cityname
-        city_code = None
-        try:
-            for i in range(len(self.citycodes_database.MainArray)):
-                if self.citycodes_database.MainArray[i] is not None:
-                    if self.citycodes_database.MainArray[i] == city_name.capitalize():
-                        city_code = i
-        except:
-            return 'city not founded!'  
+        city_code = self._get_citycode_from_cityname(city_name)
+        for item in self.cars_database.table:
+            if item is not None and item != 'DELETED':
+                car_data = item[1]
+                curr_car_citycode = car_data.plate_number.split('-')[1]
+                if int(curr_car_citycode) == int(city_code):
+                    print(f'{car_data.car_color} {car_data.car_name} {car_data.production_year} {car_data.plate_number} {car_data.id} {car_data.owner_id}')
     
     def search_cars(self):    
         while True:
@@ -145,10 +146,31 @@ class Admin:
             
             if not any_found_flag:
                 return None
-                
+    
+    def show_car_owners_of_a_city(self , city_name):
+        city_code = self._get_citycode_from_cityname(city_name)
+        
+        for item in self.cars_database.table:
+            if item is not None and item != 'DELETED':
+                curr_car_citycode = item[1].plate_number.split('-')[1]
+                if int(curr_car_citycode) == int(city_code):
+                    owner_id = item[1].owner_id
+                    owner_data = self.users_database.Search(owner_id)
+                    print(owner_data)
+                    
+    def update_username(self , id):
+        if self.users_database.Search(id) :
+            user_data = self.users_database.Search(id)
+            new_name = input('inter users new name: ')
+            new_user_data = (new_name , user_data[1], user_data[2] , user_data[3], user_data[4])
+            self.users_database.Delete(id)
+            self.users_database.Insert(id , new_user_data)
+            return f'user {id} updated successfully'
+        else:
+            raise Exception('user not found')
 admin = Admin()
 
 # admin.plate_a_car('33d754-11' , '1274437280')
 # admin.show_all_cars()
 # admin.show_plates_of_a_city('Tehran')
-admin.search_cars()
+admin.update_username('5968285331')
