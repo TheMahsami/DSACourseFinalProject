@@ -2,7 +2,6 @@
 import sys , os , re
 sys.path.append(os.path.abspath('.'))
 import random
-from Modules import read_city_codes
 from DataSets.Array import Array
 from DataSets.Trie import Trie
 from Apps.Plates import LicencePlste
@@ -10,7 +9,7 @@ from DataSets.BSTHash import HashTable
 from DataSets.HashTable import OpenHashTable
 
 class User:
-    def __init__(self,fname="",lname="",ncode="",password=''):
+    def __init__(self,fname='',lname='',ncode='',password=''):
         self.id = ncode
         self.ncode = ncode
         self.name = fname
@@ -18,11 +17,11 @@ class User:
         self.password = password
         self.car_database = OpenHashTable()
         self.users_database = Trie()
-        self.plstes_database = HashTable()
-        
+        self.plates_database = HashTable()
+        self.citycode_database = Array(100)
+         
     def license_plate_generator(self , cityname , id ):
-        all_city_codes = read_city_codes()
-        city_code = all_city_codes.search(cityname)
+        city_code = self.citycode_database.search(cityname)
         if not city_code:
             return 'this city is unknown please chiise a valid city'
         
@@ -124,7 +123,7 @@ class User:
         name = input("Your first name:")
         lname = input("Your last name: ")
         ncode = input("our national coed:")
-        day_of_birth = input("Day of your birth(yyy/mm/dd): ")
+        day_of_birth = input("Day of your birth(yyy-mm-dd): ")
         password = input("Your password: ")
         
         if_user_exixt_flag= self.users_database.Search(ncode)
@@ -153,7 +152,7 @@ class User:
                 print(car)
                 
     def show_user_platelicenses(self , id):
-        for bst in self.plstes_database.table:
+        for bst in self.plates_database.table:
             if bst is not None:
                 for node in bst.traverse(bst.root):
                     if node.data.owner == id:
@@ -161,3 +160,4 @@ class User:
 user = User()
 # user.user_login()
 # u.insert(number, data)ser._password_hash_function('mahsa')
+# print(f' this is password {user._password_hash_function('my123')}')

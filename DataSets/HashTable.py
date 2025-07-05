@@ -2,7 +2,7 @@
 #for cars
 
 class OpenHashTable:
-    def __init__(self , capacity=10):
+    def __init__(self , capacity=100):
         self.capacity = capacity
         self.table = [None] * capacity
         #usefull data
@@ -15,6 +15,7 @@ class OpenHashTable:
         old_table = self.table
         new_capacity = self.capacity * 2
         self.table = [None] * new_capacity
+        self.capacity = new_capacity
         self.size = 0
         
         for index in old_table:
@@ -24,13 +25,13 @@ class OpenHashTable:
     
     def _probing(self , key):
         index = self._hash(key)
-        final_index = index
-        
-        while self.table[index] is not None and self.table[index]== 'DELETED' and self.table[index][0] != key:
-            final_index = (index +1) % self.capacity
-            if final_index == index:
-                return "Hash Table is Overflow"
-        return final_index
+        start_index = index
+        # baraye peyda kardan yek khane khali / mahsa deqat kon khane ba mark 'DELETED' ham khali hesab mishe
+        while self.table[index] is not None and self.table[index] != 'DELETED' and self.table[index][0] != key:
+            index = (index +1) % self.capacity
+            if index == start_index:
+                raise Exception('Hash Table Overflow!!')
+        return index
     
             
             
@@ -40,10 +41,13 @@ class OpenHashTable:
             
 
         index = self._probing(int(key))
-        if self.table[index] is None:
+        if self.table[index] is None or self.table[index] == 'DELETEED':
             self.table[index] = (key , value)
             self.size +=1
             return f'the key {key} with value {value} inserted successfully'
+        else:
+            self.table[index] = (key , value)
+            return f'The key {key} is updated successfully'
         
     
     def Delete(self , key):

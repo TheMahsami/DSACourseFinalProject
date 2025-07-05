@@ -94,7 +94,7 @@ hash = HashTable()
 hash.insert('22f333-66' , 'data1')
 hash.insert('44t843-90' , 'data2')
 res = hash.tarverse()
-for bucket in res :
-    print(bucket)
-print(res)
+# for bucket in res :
+#     print(bucket)
+# print(res)
 
