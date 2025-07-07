@@ -1,5 +1,6 @@
 import random , re , sys  , os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__) , '..')))
+from datetime import datetime
 from DataSets.HashTable import *
 from DataSets.Trie import Trie
 import Car
@@ -17,6 +18,11 @@ class Admin:
         self.citycodes_database = read_city_codes()
         
     def plate_a_car(self , plate_number , id):
+        
+            for item in self.cars_database.table:
+                if item is not None and item != 'DELETED':
+                    if item[1].plate_number == plate_number:
+                        raise Exception('this car already has a license plate!! try with a deactive plate.')
 
             car_color = input('inter your car color: ')
             if car_color.lower() == 'white':
@@ -39,12 +45,12 @@ class Admin:
                 if re.fullmatch(r'\d{2}[a-zA-Z]\d{3}-\d{2}' , plate):
                     break
                 else:
-                    return ' wrong format for plate number plz try agin in form NNLNNN'
+                    raise Exception (' wrong format for plate number plz try agin in form NNLNNN')
             
             car_id = ''.join(random.choices('0123456789' , k = 5))
             while True:
                 production_date = input("inter the prodoction year of your car: ")
-                plated_date = input('inter todays date(yyyy/mm/dd): ')
+                plated_date = datetime.today().strftime('%Y-%m-%d')
                 try:
                     production_year = int(production_date.split('/')[0])
                     plated_year = int(plated_date.split('/')[0])
@@ -173,4 +179,4 @@ admin = Admin()
 # admin.plate_a_car('33d754-11' , '1274437280')
 # admin.show_all_cars()
 # admin.show_plates_of_a_city('Tehran')
-admin.update_username('5968285331')
+admin.plate_a_car('21A763-71' , '1274437180')
