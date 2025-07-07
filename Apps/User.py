@@ -7,6 +7,7 @@ from DataSets.Trie import Trie
 from Apps.Plates import LicencePlste
 from DataSets.BSTHash import HashTable
 from DataSets.HashTable import OpenHashTable
+from Modules import read_drivers , read_penalties
 
 class User:
     def __init__(self,fname='',lname='',ncode='',password=''):
@@ -19,6 +20,8 @@ class User:
         self.users_database = Trie()
         self.plates_database = HashTable()
         self.citycode_database = Array(100)
+        self.drivers_database = read_drivers()
+        self.penalties_database = read_penalties()
          
     def license_plate_generator(self , cityname , id ):
         city_code = self.citycode_database.search(cityname)
@@ -157,7 +160,29 @@ class User:
                 for node in bst.traverse(bst.root):
                     if node.data.owner == id:
                         print(node.data)
+    
+    def show_users_negative_score(self):
+        while True:
+            national_code = input('Inter Your National ID: ')
+            driver_id = input('Inter Your Driver ID: ')
+            driver_data = self.drivers_database.Search(national_code)
+            if driver_data.national_id == national_code and driver_data.driver_id == driver_id:
+                break
+            else:
+                raise Exception("Driver ID Doesn't Found!")
+        
+        sum = 0
+        for item in self.penalties_database.traverse():
+            if item[1] == driver_id:
+                if item[4] == 'Low':
+                    sum += 10
+                elif item[4] == 'Medium':
+                    sum += 30
+                elif item[4] == 'High':
+                    sum += 50
+        return sum
 user = User()
 # user.user_login()
 # u.insert(number, data)ser._password_hash_function('mahsa')
 # print(f' this is password {user._password_hash_function('my123')}')
+print(user.show_users_negative_score())
