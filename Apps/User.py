@@ -7,7 +7,7 @@ from DataSets.Trie import Trie
 from Apps.Plates import LicencePlste
 from DataSets.BSTHash import HashTable
 from DataSets.HashTable import OpenHashTable
-from Modules import read_drivers , read_penalties
+from Modules import read_drivers , read_penalties , read_plates , read_ownership_history , read_cars
 
 class User:
     def __init__(self,fname='',lname='',ncode='',password=''):
@@ -16,12 +16,13 @@ class User:
         self.name = fname
         self.lastname = lname
         self.password = password
-        self.car_database = OpenHashTable()
+        self.car_database = read_cars()
         self.users_database = Trie()
-        self.plates_database = HashTable()
+        self.plates_database = read_plates()
         self.citycode_database = Array(100)
         self.drivers_database = read_drivers()
         self.penalties_database = read_penalties()
+        self.owner_ship_history = read_ownership_history()
          
     def license_plate_generator(self , cityname , id ):
         city_code = self.citycode_database.search(cityname)
@@ -126,7 +127,7 @@ class User:
         name = input("Your first name:")
         lname = input("Your last name: ")
         ncode = input("our national coed:")
-        day_of_birth = input("Day of your birth(yyy-mm-dd): ")
+        day_of_birth = input("Day of your birth(e.g. yyy-mm-dd): ")
         password = input("Your password: ")
         
         if_user_exixt_flag= self.users_database.Search(ncode)
@@ -160,7 +161,8 @@ class User:
                 for node in bst.traverse(bst.root):
                     if node.data.owner == id:
                         print(node.data)
-    
+        
+#_____phase 3 functionality__________________________________________________
     def show_users_negative_score(self):
         while True:
             national_code = input('Inter Your National ID: ')
@@ -181,8 +183,63 @@ class User:
                 elif item[4] == 'High':
                     sum += 50
         return sum
+    
+    def show_users_penalties_based_driverid(self):
+        driver_id = input('Inter Your Driver ID: ')
+        founded_flag = False
+        for item in self.penalties_database.traverse():
+            #item is a penalty object from App.Penalty
+            if item.driver_id == driver_id:
+                founded_flag = True
+                print(f'{item.penalty_date} {item.plate_number} {item.level} {item.decription}')
+        
+        if founded_flag == False:
+            return f'Driver {driver_id} Has No Penalties.'
+    
+    def show_users_penalties_based_platenumber(self):
+        while True:
+                id = input('Inter Your National ID: ')
+                plate_number = input('Inter Your LicensePlate Number: ')
+                
+                if not re.fullmatch(r'\d{2}[a-zA-Z]\d{3}-\d{2}' , plate_number):
+                            raise ValueError('Wrong Format For LicensePlate Number!!!')
+                
+                plate_data = self.plates_database.search(plate_number)
+                if plate_data is None:
+                        raise Exception('LicensePlate Not Founded!')
+
+                if plate_data.owner != id:
+                        raise Exception("National ID and LicensePlate Number Dosen't Match")
+                break
+            
+        founded_flag = False
+        for item in self.penalties_database.traverse():
+            if item.plate_number == plate_number:
+                founded_flag = True
+                print(f'{item.penalty_date} {item.plate_number} {item.level} {item.decription}')
+        
+        if founded_flag == False:
+            return f'LicensePlate Number {plate_number} Has No Penalties.'
+        
+    def history_of_licenseplate(self):
+        try:
+            plate_number = input('Inter Your LicencePlate Number: ')
+            if re.fullmatch(r'\d{2}[a-zA-Z]\d{3}-\d{2}' , plate_number):
+                pass
+        except:
+                raise ValueError('Wrong Format For LicensePlate Number!!!')
+            
+        for item in self.owner_ship_history.traverse():
+            if item.plate_number == plate_number:
+                car_id = item.car_id
+                start = item.start_date
+                end = item.end_date
+                car_data = self.car_database.Search(car_id)
+                print(f'{car_data.id} {car_data.car_name} {car_data.car_color} {car_data.production_year} {start} {end}')
+                    
 user = User()
 # user.user_login()
 # u.insert(number, data)ser._password_hash_function('mahsa')
 # print(f' this is password {user._password_hash_function('my123')}')
-print(user.show_users_negative_score())
+# print(user.show_users_negative_score())
+user.history_of_licenseplate()

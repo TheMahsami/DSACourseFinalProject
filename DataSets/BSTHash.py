@@ -49,7 +49,7 @@ class BST:
     
     def traverse(self , root):
         if root is None:
-            return None
+            return
         yield from self.traverse(root.left)
         yield root
         yield from self.traverse(root.right)
@@ -81,19 +81,19 @@ class HashTable:
             return self.table[index].search(number)
         except:
             return None
-    def tarverse(self):
+    def traverse(self):
         for item in self.table:
-            # return self.table[item].traverse()
-            if item is None:
-                yield 'None'
-            else:
-                yield (node.data for node in item.traverse(item.root))
+            if item is not None:
+                for node in item.traverse(item.root):
+                    yield node.data
+
                 
         
 hash = HashTable()
 hash.insert('22f333-66' , 'data1')
 hash.insert('44t843-90' , 'data2')
-res = hash.tarverse()
+res = hash.traverse()
+
 # for bucket in res :
 #     print(bucket)
 # print(res)

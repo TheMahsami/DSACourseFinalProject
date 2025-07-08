@@ -22,16 +22,16 @@ class OpenHashTable:
             if index is not None and index != 'DELETED':
                 self.Insert(index[0],index[1])
                 
-    
-    def _probing(self , key):
-        index = self._hash(key)
-        start_index = index
-        # baraye peyda kardan yek khane khali / mahsa deqat kon khane ba mark 'DELETED' ham khali hesab mishe
-        while self.table[index] is not None and self.table[index] != 'DELETED' and self.table[index][0] != key:
-            index = (index +1) % self.capacity
-            if index == start_index:
-                raise Exception('Hash Table Overflow!!')
-        return index
+   #HAS ERROR        #############################################
+    # def _probing(self , key):
+    #     index = self._hash(key)
+    #     start_index = index
+    #     # baraye peyda kardan yek khane khali / mahsa deqat kon khane ba mark 'DELETED' ham khali hesab mishe
+    #     while self.table[index] is not None and self.table[index] != 'DELETED' and self.table[index][0] != key:
+    #         index = (index +1) % self.capacity
+    #         if index == start_index:
+    #             raise Exception('Hash Table Overflow!!')
+    #     return index
     
             
             
@@ -40,31 +40,52 @@ class OpenHashTable:
             self._resize()
             
 
-        index = self._probing(int(key))
-        if self.table[index] is None or self.table[index] == 'DELETEED':
-            self.table[index] = (key , value)
-            self.size +=1
-            return f'the key {key} with value {value} inserted successfully'
-        else:
-            self.table[index] = (key , value)
-            return f'The key {key} is updated successfully'
+        index = self._hash(int(key))
+        start_index = index
+        
+        while self.table[index] is not None and self.table[index] != 'DELETED':
+            if self.table[index][0] == key:
+                self.table[index] = (key , value)
+                return f'The key {key} is updated successfully'
+            
+            index = (index + 1) % self.capacity
+            if index == start_index:
+                raise Exception('Hash Table OVERFLOW!')
+            
+        self.table[index] = (key , value)
+        self.size +=1
+        return f'the key {key} with value {value} inserted successfully'
         
     
     def Delete(self , key):
-        index = self._probing(int(key))
-        if self.table[index] is None or self.table[index] == 'DELETED':
-            raise KeyError("key not founded!")
+        index = self._hash(int(key))
+        start_index = index
         
-        self.table[index] = 'DELETED'
-        self.size -= 1
-        return f'key {key} deleted from table successfully'
+        while self.table[index] is not None:
+            if self.table[index] != 'DELETED' and self.table[index][0] == key:
+                self.table[index] = 'DELETED'
+                self.size -= 1
+                return f'key {key} deleted from table successfully'
+        
+            index = (index + 1) % self.capacity
+            if start_index == index:
+                break      
+        raise KeyError("key not founded!")
     
     def Search(self,key):
-        index = self._probing(int(key))
-        if self.table[index] is None or self.table[index] == 'DELETED':
-            raise KeyError(f'key {key} not founded!')
+        index = self._hash(int(key))
+        start_index = index
         
-        return self.table[index][1]
+        while self.table[index] is not None:
+            if self.table[index] != 'DELETED' and self.table[index][0] == key:
+                return self.table[index][1]
+            
+            index = (index + 1) % self.capacity
+            if start_index == index:
+                break
+        
+        raise KeyError(f'key {key} not founded!')
+
     
     def Traverse(self):
         for item in self.table:

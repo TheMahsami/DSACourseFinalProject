@@ -1,3 +1,4 @@
+#ownership history
 class Node:
     def __init__(self , data):
         self.data = data
@@ -37,8 +38,11 @@ class DoublyLinkedList:
     
     def traverse(self):
         curr = self.head
-        while curr:
-            yield curr.data
-            curr = curr.next
+        try:
+            while curr:
+                yield curr.data
+                curr = curr.next
+                
+        except:
+            raise Exception('there is no data for show')
         
-        yield None

@@ -3,15 +3,20 @@ from pathlib import Path
 import sys
 from DataSets.Array import Array
 from DataSets.HashTable import OpenHashTable
+from DataSets.BSTHash import HashTable
 from Apps.Car import Car
 from DataSets.Trie import Trie
+from Apps.Driver import Driver
+from Apps.Penalty import Penalty
+from Apps.Plates import LicencePlste
+from Apps.History import HistoryData
+from DataSets.DoublyLinkedList import DoublyLinkedList
 
 
 
 
 def read_city_codes(filepath='tests/citycode.txt'):
     city_codes = Array(100)
-    # try:
     with open(filepath , 'r') as f:
         next(f , None)
         for line in f:
@@ -39,7 +44,6 @@ def read_cars(filepath='tests/cars.txt'):
             owner_id = parts[5].strip()
             car_obj = Car(color , car_name , product_date , car_id , plate_number , owner_id , plated_date=None )
             cars.Insert(car_id , car_obj)
-
     return cars
 
 def read_users(filepath='tests/users.txt'):
@@ -59,3 +63,52 @@ def read_users(filepath='tests/users.txt'):
             users.Insert(national_code ,user_data)
     return users
 
+#phase 3 functionality
+def read_drivers(filepath='tests/drivers.txt'):
+    drivers = Trie()
+    with open(filepath , 'r') as f:
+        next(f , None)
+        for line in f:
+            parts = line.strip().split(' | ')
+            driver_data = Driver(parts[0] , parts[1] , parts[2])
+            drivers.Insert(parts[0] , driver_data)
+    return drivers
+
+def read_penalties(filepath='tests/penalties.txt'):
+    penalties = DoublyLinkedList()
+    with open(filepath , 'r') as f:
+        next(f , None)
+        for line in f:
+            parts = line.strip().split(' | ')
+            penalty_data = Penalty(parts[0] , parts[1] , parts[2] , parts[3], parts[4] , parts[5])
+            penalties.insert(penalty_data)
+    
+    return penalties
+
+def read_ownership_history(filepath='tests/ownership_history.txt'):
+    ownership_history = DoublyLinkedList()
+    with open(filepath , 'r') as f:
+        for line in f:
+            parts = line.strip().split(' | ')
+            data = HistoryData(parts[0] , parts[1] , parts[2], parts[3] , parts[4])
+            ownership_history.insert(data)
+            
+    return  ownership_history
+
+#________________________________________________________________________
+def read_plates(filepath='tests/test_plates.txt'):
+    plates = HashTable()
+    with open(filepath, 'r') as f:
+        for line in f:
+            parts = line.strip().split(' | ')
+            number = parts[0].strip()
+            owner = parts[1].strip()
+            is_active = parts[2].strip().capitalize() == 'True' if len(parts) > 2 else False
+            plate_data = LicencePlste(number=number, owner=owner, is_active=is_active)
+            plates.insert(number, plate_data)
+
+    return plates
+#___________________________________________________________________________________________
+             
+
+read_cars()
