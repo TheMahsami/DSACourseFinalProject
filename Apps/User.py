@@ -23,11 +23,12 @@ class User:
         self.drivers_database = read_drivers()
         self.penalties_database = read_penalties()
         self.owner_ship_history = read_ownership_history()
+        
          
     def license_plate_generator(self , cityname , id ):
         city_code = self.citycode_database.search(cityname)
         if not city_code:
-            return 'this city is unknown please chiise a valid city'
+            return 'This City is Unknown Please Choose a Valid City'
         
         allowed_letters = 'ABCEFGHIJKLMNOQRSTUVWXYZ'
         letter = random.choice(allowed_letters)
@@ -37,7 +38,7 @@ class User:
         attempted_numbers_counter = 0
         while not valid_number_flag and attempted_numbers_counter <6:
 
-            temp = ''.join(random.choice('0123456789' , k = 5))
+            temp = ''.join(random.choices('0123456789' , k = 5))
 
             if self._is_valid_plate_nummber(temp , letter):
                 strnumbers = temp
@@ -92,26 +93,28 @@ class User:
                     count +=1
                     break
         return count
-    # is_loged_in_flag = None
+    
     def user_login(self):
-        id = input("id or national code: ")
+        id = input("Enter Your ID or National Code: ")
         
         if_exist = self.users_database.Search(id)
         
         if if_exist is None:
-            return 'this id not exist in system plz sighn in first!' ,None
+            yield 'This User ID Doesnt Exist in System Plz Sign in First!'
+            return
         
         while True:
-            password = input("password (or exit for exit): ")
-            if password.lower == 'exit':
-                return 'loging in was canceled'
+            password = input("password (or type exit for exit): ")
+            if password.lower() == 'exit':
+                yield 'Login Was Canceled'
+                return
             
             hashed_password = self._password_hash_function(password)
             if if_exist['password'] == hashed_password:
-                return f'{id} loged in successfully'
+                yield f'{id} Logged in Successfully'
         
             else:
-                return 'wrong passwprd error... plz try again(or exit for exit)'
+                yield 'Wrong Password Error... Plz Try Again(or type exit for exit)'
     
     def _password_hash_function(self, password):
         salt = 'MystaticSalt0106'
@@ -124,54 +127,59 @@ class User:
         
     def user_register(self):
         
-        name = input("Your first name:")
-        lname = input("Your last name: ")
-        ncode = input("our national coed:")
-        day_of_birth = input("Day of your birth(e.g. yyy-mm-dd): ")
-        password = input("Your password: ")
+        name = input("Enter Your First Name:")
+        lname = input("Enter Your Last Name: ")
+        ncode = input("Enter Your National Code: ")
+        day_of_birth = input("Enter Day of Your Birth(e.g. yyyy-mm-dd): ")
+        password = input("Enter Your Password: ")
         
         if_user_exixt_flag= self.users_database.Search(ncode)
         if if_user_exixt_flag is not None:
-            return  f'this user {ncode} alreday have an account'
+            yield  f'User {ncode} Already Exists'
+            return
         
         #ncode cheacker:
         if not ncode.isdigit() or len(ncode) != 10:
-            return "invalid format for national code. plz try again."
+            yield "Invalid National Code Format"
+            return
         
         #password cheacker:
         if len(password) < 8:
-            return ' password most have 8 character at least'
+            yield 'Password Most be at least 8 Character'
+            return
         if not re.search('[a-zA-Z]', password) or not re.search('[0-9]' , password):
-            return False
+            yield 'Password Most Include both Letters and Numbers'
+            return
+        
         hashed_password = self._password_hash_function(password)
         
         user_data = (name , lname , ncode, day_of_birth , hashed_password)
         self.users_database.Insert(ncode, user_data)
-        return f'user {ncode} added successfully'
+        yield f'User {ncode} Added Successfully'
     
     def show_user_cars(self , id):
         for item in self.car_database.Traverse():
             key , car = item
             if car.owner_is == id:
-                print(car)
+                yield str(car)
                 
     def show_user_platelicenses(self , id):
         for bst in self.plates_database.table:
             if bst is not None:
                 for node in bst.traverse(bst.root):
                     if node.data.owner == id:
-                        print(node.data)
+                        yield str(node.data)
         
 #_____phase 3 functionality__________________________________________________
     def show_users_negative_score(self):
         while True:
-            national_code = input('Inter Your National ID: ')
-            driver_id = input('Inter Your Driver ID: ')
+            national_code = input('Enter Your National ID: ')
+            driver_id = input('Enter Your Driver ID: ')
             driver_data = self.drivers_database.Search(national_code)
             if driver_data.national_id == national_code and driver_data.driver_id == driver_id:
                 break
             else:
-                raise Exception("Driver ID Doesn't Found!")
+                raise Exception("Driver ID Not Found!")
         
         sum = 0
         for item in self.penalties_database.traverse():
@@ -182,64 +190,67 @@ class User:
                     sum += 30
                 elif item[4] == 'High':
                     sum += 50
-        return sum
+        yield f'Negative Score For Driver {driver_id}:'
+        yield sum
     
     def show_users_penalties_based_driverid(self):
-        driver_id = input('Inter Your Driver ID: ')
+        driver_id = input('Enter Your Driver ID: ')
         founded_flag = False
+        
+        yield f'Penalties For Driver {driver_id}:'
         for item in self.penalties_database.traverse():
             #item is a penalty object from App.Penalty
             if item.driver_id == driver_id:
                 founded_flag = True
-                print(f'{item.penalty_date} {item.plate_number} {item.level} {item.decription}')
+                yield f'Penalty Date: {item.penalty_date} For LicensePlate Number {item.plate_number}.\nLevel: {item.level}\nDescription: {item.description}'
         
-        if founded_flag == False:
-            return f'Driver {driver_id} Has No Penalties.'
+        if not founded_flag:
+            yield f'Driver {driver_id} Has No Penalties.'
     
     def show_users_penalties_based_platenumber(self):
         while True:
-                id = input('Inter Your National ID: ')
-                plate_number = input('Inter Your LicensePlate Number: ')
+                id = input('Enter Your National ID: ')
+                plate_number = input('Enter Your LicensePlate Number: ')
                 
                 if not re.fullmatch(r'\d{2}[a-zA-Z]\d{3}-\d{2}' , plate_number):
                             raise ValueError('Wrong Format For LicensePlate Number!!!')
                 
                 plate_data = self.plates_database.search(plate_number)
                 if plate_data is None:
-                        raise Exception('LicensePlate Not Founded!')
+                        raise Exception('LicensePlate Not Found!')
 
                 if plate_data.owner != id:
                         raise Exception("National ID and LicensePlate Number Dosen't Match")
                 break
             
         founded_flag = False
+        yield f'Penalties For PlateNumber {plate_number}:'
         for item in self.penalties_database.traverse():
             if item.plate_number == plate_number:
                 founded_flag = True
-                print(f'{item.penalty_date} {item.plate_number} {item.level} {item.decription}')
+                yield f'Penalty Date: {item.penalty_date} For LicensePlate Number: {item.plate_number}.\nLevel: {item.level}\nDescription: {item.description}'
+                
         
         if founded_flag == False:
-            return f'LicensePlate Number {plate_number} Has No Penalties.'
+            yield f'LicensePlate Number {plate_number} Has No Penalties.'
         
     def history_of_licenseplate(self):
-        try:
-            plate_number = input('Inter Your LicencePlate Number: ')
-            if re.fullmatch(r'\d{2}[a-zA-Z]\d{3}-\d{2}' , plate_number):
-                pass
-        except:
-                raise ValueError('Wrong Format For LicensePlate Number!!!')
+        plate_number = input('Enter Your LicencePlate Number: ')
+        if not re.fullmatch(r'\d{2}[a-zA-Z]\d{3}-\d{2}' , plate_number):
+            raise ValueError('Wrong Format For LicensePlate Number!!!')
             
+        yield f"{plate_number}'s History:"
         for item in self.owner_ship_history.traverse():
             if item.plate_number == plate_number:
                 car_id = item.car_id
                 start = item.start_date
                 end = item.end_date
                 car_data = self.car_database.Search(car_id)
-                print(f'{car_data.id} {car_data.car_name} {car_data.car_color} {car_data.production_year} {start} {end}')
+                yield f'Car Data: \nCar ID: {car_data.id}\nCar Name: {car_data.car_name}\nCar Color{car_data.car_color}\nCar Production Year: {car_data.production_year}\nOwnership Data: \nStart Date: {start}\nEnd Date: {end}'
                     
 user = User()
 # user.user_login()
 # u.insert(number, data)ser._password_hash_function('mahsa')
 # print(f' this is password {user._password_hash_function('my123')}')
 # print(user.show_users_negative_score())
-user.history_of_licenseplate()
+user.show_users_penalties_based_driverid()
