@@ -137,6 +137,59 @@ def admin_menu(admin):
         else:
             yield 'Invalid Choise.Try Again!! '
             
+def user_menu(user):
+    while True:
+        yield from display_menu('user')
+        
+        choise = input('\nEnter Your Choise: ')
+        
+        if choise == "1":
+            id = input("Enter Your ID: ")
+            city_name = input("Enter City Name: ")
+            for massage in user.license_plate_generator(city_name , id):
+                yield massage
+            
+        elif choise == '2':
+            id = input("Enter Your ID: ")
+            for massage in user.show_user_car():
+                yield massage
+        
+        elif choise == '3':
+            id = input("Enter Your ID: ")
+            for massage in user.show_user_platelicenses():
+                yield massage
+                
+        elif choise == '4':
+            national_code = input('Enter Your National ID: ')
+            driver_id = input('Enter Your Driver ID: ')
+            for massage in user.show_users_negative_score(national_code , driver_id):
+                yield massage
+                
+        elif choise == '5':
+            driver_id = input('Enter Your Driver ID: ')
+            for massage in user.show_users_penalties_based_driverid(driver_id):
+                yield massage
+                
+        elif choise == '6':
+            id = input('Enter Your National ID: ')
+            plate_number = input('Enter Your LicensePlate Number: ')
+            for massage in user.show_users_penalties_based_platenumber(id , plate_number):
+                yield massage
+
+        elif choise =='7':
+            plate_number = input('Enter Your LicencePlate Number: ')
+            for massage in user.history_of_licenseplate(plate_number):
+                yield massage
+                
+        elif choise == '8':
+            break
+        
+        else:
+            yield 'Invalid Choise.Try Again!! '
+        
+        
+    
+            
                 
 for massage in admin_menu(admin='admin'):
     print(massage)
