@@ -26,8 +26,9 @@ class User:
         
          
     def license_plate_generator(self , cityname , id ):
+        cityname = cityname.capitalize()
         city_code = self.citycode_database.search(cityname)
-        if not city_code:
+        if city_code is None:
             return 'This City is Unknown Please Choose a Valid City'
         
         allowed_letters = 'ABCEFGHIJKLMNOQRSTUVWXYZ'
@@ -245,4 +246,4 @@ user = User()
 # u.insert(number, data)ser._password_hash_function('mahsa')
 # print(f' this is password {user._password_hash_function('my123')}')
 # print(user.show_users_negative_score())
-# user.user_login('6745229357')
+# user.license_plate_generator('tehran' ,'2078610709')

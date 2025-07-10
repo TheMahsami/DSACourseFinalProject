@@ -26,6 +26,7 @@ def read_city_codes(filepath='tests/citycode.txt'):
             cityname = parts[1].strip()
             if cityname and citycoded:
                 city_codes.insert(citycoded , cityname)
+
     return city_codes
 
 def read_cars(filepath='tests/cars.txt'):
@@ -121,4 +122,4 @@ class generator:
             res += output + '\n'
         yield res
     
-    
+read_city_codes()

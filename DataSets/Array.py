@@ -42,10 +42,11 @@ class Array:
             raise IndexError("Index out of range")
         
     def search(self, data):
-        for i in range(self.usefulldata):
+        for i in range(len(self.MainArray)):
             if self.MainArray[i] == data:
                 return i
-        return "your data not foounded"
+            
+        return None
     
     def delete(self, data):
         if data in self.MainArray:
@@ -57,4 +58,6 @@ class Array:
             raise ValueError("data not founded")
             
         
-        
+    def traverse(self):
+        for item in self.MainArray:
+            print(item)
