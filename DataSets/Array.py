@@ -60,4 +60,4 @@ class Array:
         
     def traverse(self):
         for item in self.MainArray:
-            print(item)
+            yield(item)

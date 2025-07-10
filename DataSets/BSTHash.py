@@ -89,10 +89,10 @@ class HashTable:
 
                 
         
-hash = HashTable()
-hash.insert('22f333-66' , 'data1')
-hash.insert('44t843-90' , 'data2')
-res = hash.traverse()
+# hash = HashTable()
+# hash.insert('22f333-66' , 'data1')
+# hash.insert('44t843-90' , 'data2')
+# res = hash.traverse()
 
 # for bucket in res :
 #     print(bucket)

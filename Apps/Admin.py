@@ -233,13 +233,13 @@ class Admin:
             yield f"LicensePlate Number of {car_id} Updated to {new_plate_number} Successfully."
                 
             
-admin = Admin()
+# admin = Admin()
 
 # admin.plate_a_car('33d754-11' , '1274437280')
 # admin.show_all_cars()
 # admin.show_plates_of_a_city('Tehran')
 # admin.plate_a_car('21A763-71' , '1274437180')
-for message in admin.change_plate_owner('13638' , '28G206-44' , '59D327-71'):
-    print(message)
+# for message in admin.change_plate_owner('13638' , '28G206-44' , '59D327-71'):
+#     print(message)
 # for massage in admin.admin_login('admin' , "admin"):
 #     print(massage)

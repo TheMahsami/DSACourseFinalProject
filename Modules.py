@@ -111,15 +111,15 @@ def read_plates(filepath='tests/test_plates.txt'):
     return plates
 #___________________________________________________________________________________________
              
-
-class generator:
-    def __init__(self , generator):
-        self.generator = generator
+#failed try
+# class generator:
+#     def __init__(self , generator):
+#         self.generator = generator
     
-    def __str__(self):
-        res = ''
-        for output in self.generator:
-            res += output + '\n'
-        yield res
+#     def __str__(self):
+#         res = ''
+#         for output in self.generator:
+#             res += output + '\n'
+#         yield res
     
-read_city_codes()
+# read_city_codes()

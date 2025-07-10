@@ -12,8 +12,8 @@ class Car:
         self.plated_date = plated_date
         
         
-    def write_to_array():
-        pass
-    def get_car_owner():
-        pass
+    # def write_to_array():
+    #     pass
+    # def get_car_owner():
+    #     pass
     
