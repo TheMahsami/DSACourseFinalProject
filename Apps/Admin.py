@@ -6,17 +6,20 @@ from DataSets.Trie import Trie
 from Apps.Car import Car
 from DataSets.BSTHash import HashTable
 from DataSets.Array import Array
-from Modules import read_city_codes , read_cars , read_users , read_plates , read_ownership_history
+from Modules import read_city_codes , read_cars , read_users , read_plates , read_ownership_history , read_drivers , read_penalties
 
 class Admin:
-    def __init__(self):
-        self.usename = 'admin'
-        self.password = 'admin'
+    def __init__(self , username='admin' , password = 'admin'):
+        self.username = username
+        self.password = password
         self.cars_database = read_cars()
         self.users_database = read_users()
         self.plates_database = read_plates()
         self.citycodes_database = read_city_codes()
         self.ownership_history = read_ownership_history()
+        self.drivers_database =read_drivers()
+        self.penalties_database = read_penalties()
+    
         
     def plate_a_car(self , plate_number , id , car_color , car_name ,production_date):
         
@@ -196,10 +199,47 @@ class Admin:
             #items are Apps.History
             if item.car_id == car_id:
                 yield f'Owner ID: {item.owner_id}\nStart Date: {item.start_date} End Date: {item.end_date}\nWith LicencePlate Number: {item.plate_number}'
+    
+    def show_all_drivers(self):
+        yield "All Drivers Records:\n"
+        for item in self.drivers_database.Traverse():
+            driver_data = item[1]
+            yield f"Driver NationalCode: {driver_data.national_id}\nDriver ID: {driver_data.driver_id} - Date of DriverLicence: {driver_data.license_date}\n"
+            
+    def change_plate_owner(self , car_id , plate_number , new_plate_number):
+        car = self.cars_database.Search(car_id)
+        #car is a car object from Apps.Car
+        if car is None:
+            print( f'Car {car_id} Not Exist.')
+            return
+        if not re.fullmatch(r'\d{2}[a-zA-Z]\d{3}-\d{2}' , plate_number):
+                    raise Exception ('Wrong Format For LicensePlate Number Plz try agin with form NNLNNN')
+        
+        if re.fullmatch(r'\d{2}[a-zA-Z]\d{3}-\d{2}' , new_plate_number):
+            
+            new_plate = self.plates_database.search(new_plate_number)
+            #new plate is a liceensePlate object from Apps.Plates
+            if new_plate is None:
+                yield "Your New LicencePlate Number not Exist. Plz Generate a Number From User Panel/Generate LicensePlate Number."
+                return
+            
+            for item in self.cars_database.Traverse():
+                #item[1] is  a car obj from Apps.Car
+                if item[1].plate_number == new_plate_number:
+                    yield('This LicensePlate Number Belongs to another Car!')
+                    return
+
+            car.plate_number = new_plate_number
+            yield f"LicensePlate Number of {car_id} Updated to {new_plate_number} Successfully."
+                
+            
 admin = Admin()
 
 # admin.plate_a_car('33d754-11' , '1274437280')
 # admin.show_all_cars()
 # admin.show_plates_of_a_city('Tehran')
 # admin.plate_a_car('21A763-71' , '1274437180')
-admin.show_ownership_history('45636')
+for message in admin.change_plate_owner('13638' , '28G206-44' , '59D327-71'):
+    print(message)
+# for massage in admin.admin_login('admin' , "admin"):
+#     print(massage)

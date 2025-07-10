@@ -7,7 +7,7 @@ from DataSets.Trie import Trie
 from Apps.Plates import LicencePlste
 from DataSets.BSTHash import HashTable
 from DataSets.HashTable import OpenHashTable
-from Modules import read_drivers , read_penalties , read_plates , read_ownership_history , read_cars
+from Modules import read_drivers ,read_users, read_penalties , read_plates , read_ownership_history , read_cars
 
 class User:
     def __init__(self,fname='',lname='',ncode='',password=''):
@@ -94,27 +94,25 @@ class User:
                     break
         return count
     
-    def user_login(self):
-        id = input("Enter Your ID or National Code: ")
+    def user_login(self, id , password):
         
         if_exist = self.users_database.Search(id)
-        
         if if_exist is None:
             yield 'This User ID Doesnt Exist in System Plz Sign in First!'
             return
-        
-        while True:
-            password = input("password (or type exit for exit): ")
-            if password.lower() == 'exit':
-                yield 'Login Was Canceled'
-                return
+    
+        # while True:
+        #     password = input("password (or type exit for exit): ")
+        #     if password.lower() == 'exit':
+        #         yield 'Login Was Canceled'
+        #         return
             
-            hashed_password = self._password_hash_function(password)
-            if if_exist['password'] == hashed_password:
+        hashed_password = self._password_hash_function(password)
+        if if_exist[4] == hashed_password:
                 yield f'{id} Logged in Successfully'
         
-            else:
-                yield 'Wrong Password Error... Plz Try Again(or type exit for exit)'
+        else:
+            yield 'Wrong Password Error...'
     
     def _password_hash_function(self, password):
         salt = 'MystaticSalt0106'
@@ -171,10 +169,8 @@ class User:
                         yield str(node.data)
         
 #_____phase 3 functionality__________________________________________________
-    def show_users_negative_score(self):
+    def show_users_negative_score(self , national_code , driver_id):
         while True:
-            national_code = input('Enter Your National ID: ')
-            driver_id = input('Enter Your Driver ID: ')
             driver_data = self.drivers_database.Search(national_code)
             if driver_data.national_id == national_code and driver_data.driver_id == driver_id:
                 break
@@ -193,8 +189,7 @@ class User:
         yield f'Negative Score For Driver {driver_id}:'
         yield sum
     
-    def show_users_penalties_based_driverid(self):
-        driver_id = input('Enter Your Driver ID: ')
+    def show_users_penalties_based_driverid(self, driver_id):
         founded_flag = False
         
         yield f'Penalties For Driver {driver_id}:'
@@ -207,10 +202,8 @@ class User:
         if not founded_flag:
             yield f'Driver {driver_id} Has No Penalties.'
     
-    def show_users_penalties_based_platenumber(self):
+    def show_users_penalties_based_platenumber(self , id , plate_number):
         while True:
-                id = input('Enter Your National ID: ')
-                plate_number = input('Enter Your LicensePlate Number: ')
                 
                 if not re.fullmatch(r'\d{2}[a-zA-Z]\d{3}-\d{2}' , plate_number):
                             raise ValueError('Wrong Format For LicensePlate Number!!!')
@@ -234,8 +227,7 @@ class User:
         if founded_flag == False:
             yield f'LicensePlate Number {plate_number} Has No Penalties.'
         
-    def history_of_licenseplate(self):
-        plate_number = input('Enter Your LicencePlate Number: ')
+    def history_of_licenseplate(self , plate_number):
         if not re.fullmatch(r'\d{2}[a-zA-Z]\d{3}-\d{2}' , plate_number):
             raise ValueError('Wrong Format For LicensePlate Number!!!')
             
@@ -253,4 +245,4 @@ user = User()
 # u.insert(number, data)ser._password_hash_function('mahsa')
 # print(f' this is password {user._password_hash_function('my123')}')
 # print(user.show_users_negative_score())
-user.show_users_penalties_based_driverid()
+# user.user_login('6745229357')
