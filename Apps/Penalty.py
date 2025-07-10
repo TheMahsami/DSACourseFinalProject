@@ -5,4 +5,4 @@ class Penalty:
         self.plate_number = plate_number
         self.penalty_date = penalty_date
         self.level = penalty_level
-        self.decription = disc
+        self.description = disc

@@ -3,10 +3,10 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__) , '..')))
 from datetime import datetime
 from DataSets.HashTable import *
 from DataSets.Trie import Trie
-import Car
+import Apps.Car
 from DataSets.BSTHash import HashTable
 from DataSets.Array import Array
-from Modules import read_city_codes , read_cars , read_users , read_plates
+from Modules import read_city_codes , read_cars , read_users , read_plates , read_ownership_history
 
 class Admin:
     def __init__(self):
@@ -16,6 +16,7 @@ class Admin:
         self.users_database = read_users()
         self.plates_database = read_plates()
         self.citycodes_database = read_city_codes()
+        self.ownership_history = read_ownership_history()
         
     def plate_a_car(self , plate_number , id):
         
@@ -193,10 +194,17 @@ class Admin:
             yield f'User {id} Updated Successfully'
         else:
             raise Exception('user not found')
+#_____ phase 3 functionality_____________________________________
+    def show_ownership_history(self , car_id):
+        yield f'Ownership History Of Car {car_id}: '
+        for item in self.ownership_history.traverse():
+            #items are Apps.History
+            if item.car_id == car_id:
+                yield f'Owner ID: {item.owner_id}\nStart Date: {item.start_date} End Date: {item.end_date}\nWith LicencePlate Number: {item.plate_number}'
 admin = Admin()
 
 # admin.plate_a_car('33d754-11' , '1274437280')
 # admin.show_all_cars()
 # admin.show_plates_of_a_city('Tehran')
 # admin.plate_a_car('21A763-71' , '1274437180')
-admin.show_car_owners_of_a_city('Qom')
+admin.show_ownership_history('45636')

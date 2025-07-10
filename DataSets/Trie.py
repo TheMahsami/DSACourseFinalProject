@@ -50,7 +50,7 @@ class Trie:
         if node is None:
             return
         if node.data:
-            yield prefix , {node.data}
+            yield prefix , node.data
         
         for index , child_node in enumerate(node.child):
             if child_node is not None:
