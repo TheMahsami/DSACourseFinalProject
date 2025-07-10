@@ -119,6 +119,6 @@ class generator:
         res = ''
         for output in self.generator:
             res += output + '\n'
-        print(res)
+        yield res
     
     

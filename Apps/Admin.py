@@ -3,7 +3,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__) , '..')))
 from datetime import datetime
 from DataSets.HashTable import *
 from DataSets.Trie import Trie
-import Apps.Car
+from Apps.Car import Car
 from DataSets.BSTHash import HashTable
 from DataSets.Array import Array
 from Modules import read_city_codes , read_cars , read_users , read_plates , read_ownership_history
@@ -18,14 +18,13 @@ class Admin:
         self.citycodes_database = read_city_codes()
         self.ownership_history = read_ownership_history()
         
-    def plate_a_car(self , plate_number , id):
+    def plate_a_car(self , plate_number , id , car_color , car_name ,production_date):
         
             for item in self.cars_database.table:
                 if item is not None and item != 'DELETED':
                     if item[1].plate_number == plate_number:
                         raise Exception('this car already has a license plate!! try with a deactive plate.')
 
-            car_color = input('Enter Your Car Color: ')
             if car_color.lower() == 'white':
                 car_color = 'WT'
             elif car_color.lower() == 'black':
@@ -40,7 +39,7 @@ class Admin:
             else:
                 car_color = 'OT'
                 
-            car_name = input('Enter Your Car Name: ')
+            
             while True:
                 plate = plate_number
                 if re.fullmatch(r'\d{2}[a-zA-Z]\d{3}-\d{2}' , plate):
@@ -50,7 +49,6 @@ class Admin:
             
             car_id = ''.join(random.choices('0123456789' , k = 5))
             while True:
-                production_date = input("Enter The Prodoction Year of Your car: ")
                 plated_date = datetime.today().strftime('%Y-%m-%d')
                 try:
                     production_year = int(production_date.split('/')[0])
@@ -122,9 +120,8 @@ class Admin:
                 if int(curr_car_citycode) == int(city_code):
                     yield f'Car ID: {car_data.id}\nCar Name: {car_data.car_name}\nCar Color: {car_data.car_color}\nProduction Year: {car_data.production_year}\nCar licencePlate Number: {car_data.plate_number}\nOwner: {car_data.owner_id}'
     
-    def search_cars(self):    
+    def search_cars(self, start , end):    
         while True:
-            start = input('inter the starting point of your time period: ')
             if start == '':
                 start = None
                 break
@@ -134,7 +131,6 @@ class Admin:
             else:
                 raise Exception('invalid format!')
         while True:
-            end = input('inter the ending point of your time period: ')
             if end == '':
                 end  = None
                 break
@@ -184,10 +180,9 @@ class Admin:
                     owner_data = self.users_database.Search(owner_id)
                     yield f'Owner Name: {owner_data[0]}\nLast Name: {owner_data[1]}\nOwner National Code: {owner_data[2]}\nOwner Birth Date: {owner_data[3]}'
                     
-    def update_username(self , id):
+    def update_username(self , id , new_name):
         if self.users_database.Search(id) :
             user_data = self.users_database.Search(id)
-            new_name = input('inter users new name: ')
             new_user_data = (new_name , user_data[1], user_data[2] , user_data[3], user_data[4])
             self.users_database.Delete(id)
             self.users_database.Insert(id , new_user_data)

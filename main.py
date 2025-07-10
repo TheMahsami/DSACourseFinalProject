@@ -77,11 +77,69 @@ def display_menu(role):
         yield "4 Exit"
         
 def admin_menu(admin):
-    
-        gnrt = display_menu('admin')
-        display = generator(gnrt).__str__()
-        # output = str(display)
-admin_menu(admin='admin')
+    while True:
+        yield from display_menu('admin')
+            
+        choise = input('\nEnter Your Choise: ')
+        
+        if choise == "1":
+            owner_id = input("Enter Owner Id: ")
+            plate_number = input("Enter LicencePlate Number: ")
+            car_color = input('Enter Car Color: ')
+            car_name = input('Enter Car Name: ')
+            production_date = input("Enter The Production Year of Car: ")
+            for massage in admin.plate_a_car(plate_number , owner_id , car_color , car_name , production_date):
+                yield massage
+            
+        elif choise == '2':
+            for massage in admin.show_all_cars():
+                yield massage
+        
+        elif choise == '3':
+            for massage in admin.show_all_users():
+                yield massage
+                
+        elif choise == '4':
+            city_name = input("enter City Name: ")
+            for massage in admin.show_plates_of_a_city(city_name):
+                yield massage
+                
+        elif choise == '5':
+            city_name = input("enter City Name: ")
+            for massage in admin.show_plates_of_a_city(city_name):
+                yield massage
+                
+        elif choise == '6':
+            city_name = input("enter City Name: ")
+            for massage in admin.show_car_owners_of_a_city(city_name):
+                yield massage
+
+        elif choise =='7':
+            start = input('inter the starting point of your time period(space for skip): ')
+            end = input('inter the ending point of your time period: ')
+            for massage in admin.search_cars(start , end):
+                yield massage
+        
+        elif choise == '8':
+            id = input("Enter User's ID: ")
+            new_name = input('inter users new name: ')
+            for massage in admin.update_username(id , new_name):
+                yield massage
+                
+        elif choise == '9':
+            car_id = input("Enter Car ID: ")
+            for massage in admin.show_ownership_history(car_id):
+                yield massage
+                
+        elif choise == '10':
+            break
+        
+        else:
+            yield 'Invalid Choise.Try Again!! '
+            
+                
+for massage in admin_menu(admin='admin'):
+    print(massage)
     
     
     
