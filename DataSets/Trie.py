@@ -49,6 +49,7 @@ class Trie:
     def _recursive_traverse(self, node , prefix):
         if node is None:
             return
+        #kar asli tabe
         if node.data:
             yield prefix , node.data
         

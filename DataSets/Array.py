@@ -9,15 +9,14 @@ class Array:
         return self.usefulldata
     
     def appendfirst(self, data):
-        if self.usefulldata == 0:
-            self.MainArray[self.usefulldata]= data
+        if self.usefulldata < self.size:
+            for i in range(self.usefulldata, 0 , -1):
+                self.MainArray[i]= self.MainArray[i - 1]
+            self.MainArray[0] = data
             self.usefulldata +=1
+
         else:
-            if self.usefulldata < self.size:
-                self.MainArray = [data] + self.MainArray
-                self.usefulldata +=1
-            else:
-                return "Array overflow error"
+            raise Exception('array overflow')
     
     def appendlast(self, data):
         if self.usefulldata == 0:
@@ -25,10 +24,10 @@ class Array:
             self.usefulldata += 1
         else:
             if self.usefulldata < self.size:
-                self.usefulldata +=1
                 self.MainArray[self.usefulldata] = data
+                self.usefulldata +=1
             else:
-                raise 
+                raise Exception('array overflow') 
 
     def insert(self, index, data):
         index = int(index)
@@ -60,4 +59,5 @@ class Array:
         
     def traverse(self):
         for item in self.MainArray:
-            yield(item)
+            if item is not None:
+                yield(item)

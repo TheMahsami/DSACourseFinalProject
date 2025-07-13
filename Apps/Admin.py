@@ -13,7 +13,7 @@ class Admin:
         self.username = username
         self.password = password
         self.cars_database = read_cars()
-        self.users_database = read_users()
+        self.users_database = Trie()
         self.plates_database = read_plates()
         self.citycodes_database = read_city_codes()
         self.ownership_history = read_ownership_history()
@@ -231,14 +231,69 @@ class Admin:
 
             car.plate_number = new_plate_number
             yield f"LicensePlate Number of {car_id} Updated to {new_plate_number} Successfully."
+            
+    # def task(self):
+    #     for item in self.users_database.Traverse():
+    #         user_id = item[1][2]
+    #         user_plate_counter = 0
+    #         for bst in self.plates_database.table:
+    #             if bst is not None:
+    #                 for node in bst.traverse(bst.root):
+    #                     if node.data.owner == user_id:
+    #                         user_plate_counter += 1
+                        
+    #         if user_plate_counter >= 3:
+    #             yield f'\nUser With ID {user_id}'
+                            
+    # def task(self,start , end , no_plate):
+    #     for item in self.users_database.Traverse():
+    #         user_id = item[1][2]
+    #         Birthday = item[1][3].split('-')
+    #         birthyear = Birthday[0]
+    #         this_year = datetime.today().strftime('%Y')
+    #         user_age = int(this_year) - int(birthyear)
+            
+    #         if int(start) <= user_age <= int(end):
+    #             counter = 0
+    #             for bst in self.plates_database.table:
+    #                 if bst is not None:
+    #                     for node in bst.traverse(bst.root):
+    #                         if node.data.owner == user_id:
+    #                             counter += 1
+                # if counter == int(no_plate):
+                #     yield f"\nWe have User {user_id} with Age {user_age} and {counter} LicensePlate Numbers."
+            
+    def task(self, first_id , sec_id):
+        first_date = Array(100)
+        sec_date = Array(100)
+        for item in self.cars_database.table:
+            if item is not None and item != "DELETED":
+                data = item[1]
+                if data.owner_id == first_id:
+                    first_date.appendlast(data.plated_date)
+                    
+                elif data.owner_id == sec_id:
+                    sec_date.appendlast(data.plated_date)
+                    
+        # first_date.traverse()
+                    
+        for i in first_date.traverse():
+            for j in sec_date.traverse():
+                if i == j:
+                    yield f"There is  a match in date {i} with users {first_id} and {sec_id}"
                 
             
-# admin = Admin()
+
+        
+        
+                
+            
+admin = Admin()
 
 # admin.plate_a_car('33d754-11' , '1274437280')
 # admin.show_all_cars()
 # admin.show_plates_of_a_city('Tehran')
-# admin.plate_a_car('21A763-71' , '1274437180')
+# admin.task()
 # for message in admin.change_plate_owner('13638' , '28G206-44' , '59D327-71'):
 #     print(message)
 # for massage in admin.admin_login('admin' , "admin"):

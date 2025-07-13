@@ -2,7 +2,8 @@ import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from Modules import read_cars, read_city_codes, read_drivers, read_ownership_history, read_penalties, read_plates, read_users
-from Modules import generator
+# 
+
 from DataSets.Array import Array
 from DataSets.Trie import Trie
 from DataSets.BSTHash import HashTable
@@ -10,7 +11,7 @@ from DataSets.HashTable import OpenHashTable
 from DataSets.DoublyLinkedList import DoublyLinkedList
 from Apps.Admin import Admin
 from Apps.User import User
-
+# in hame dade haro mirize to DS ha v ye instance az UUSer v Admin barmigardoone
 def initialize_system():
     yield "Loading system data..."
     
@@ -59,8 +60,7 @@ def save_to_files(admin, user):
         
         with open('tests/users.txt', 'w', encoding='utf-8') as f:
             f.write("National Code | First Name | Last Name | Birth Date | Password\n")
-            for item in admin.users_database.table:
-                if item is not None and item != 'DELETED':
+            for item in admin.users_database.Traverse():
                     user_data = item[1]
                     f.write(f"{user_data[2]} | {user_data[0]} | {user_data[1]} | {user_data[3]} | {user_data[4]}\n")
         
@@ -112,6 +112,7 @@ def display_menu(role):
         yield "11. Show All Drivers"
         yield "12. Change Plate Owner"
         yield "13. Back to Main Menu"
+        yield "14. For Final Task"
 
         
     elif role.lower() == 'user':
@@ -134,11 +135,11 @@ def display_menu(role):
 
 def admin_login(admin):
     yield "\n=== Admin Login ==="
-    username = input("Enter admin username: ")
-    password = input("Enter admin password: ")
+    username = input("Enter Admin Username: ")
+    password = input("Enter Admin Password: ")
     
     if username == "admin" and password == "admin":
-        yield "Admin login successful!"
+        yield "Admin Login Successfully!"
         return admin
     else:
         yield "Invalid admin credentials!"
@@ -191,7 +192,7 @@ def admin_menu(admin):
             
             elif choice == '8':
                 user_id = input("Enter User's ID: ")
-                new_name = input('Enter user\'s new name: ')
+                new_name = input("Enter user's new name: ")
                 for message in admin.update_username(user_id, new_name):
                     yield message
                     
@@ -204,18 +205,26 @@ def admin_menu(admin):
                 carid = input('Enter the Car ID: ')
                 for message in admin.show_ownership_history(carid):
                     yield message
+                    
             elif choice == '11':
                 for message in admin.show_all_drivers():
                     yield message
             
             elif choice == '12':
-                carid = input('Enter the car ID: ')
+                car_id = input('Enter the car ID: ')
                 plate_number = input('Enter the Previous Plate Number: ')
                 new_plate = input('Enter the new plate Number: ')
-                for message in admin.change_plate_owner(carid,plate_number,new_plate):
+                for message in admin.change_plate_owner(car_id,plate_number,new_plate):
                     yield message
+                    
             elif choice == '13':
                 break
+            
+            elif choice == '14':
+                first = input('Enter first ID: ')
+                sec = input('Enter second ID: ')
+                for messege in admin.task(first , sec):
+                    yield messege
             
             else:
                 yield 'Invalid Choice. Try Again!'
@@ -294,7 +303,7 @@ def main():
                 admin_instance = None
                 for message in admin_login(admin):
                     yield message
-                    if "Admin login successful!" in message:
+                    if "Admin Login Successfully!" in message:
                         admin_instance = admin
                 if admin_instance:
                     for message in admin_menu(admin_instance):

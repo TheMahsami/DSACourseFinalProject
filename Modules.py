@@ -48,8 +48,7 @@ def read_cars(filepath='tests/cars.txt'):
     return cars
 
 def read_users(filepath='tests/users.txt'):
-    from Apps.User import User
-    User_panel = User()
+    import Apps.User as usermodule
     users = Trie()
     with open(filepath , 'r') as f:
         next(f , None)
@@ -59,7 +58,7 @@ def read_users(filepath='tests/users.txt'):
             last_name = parts[2].strip()
             national_code = parts[0].strip()
             birth_date = parts[3].strip()
-            password = User_panel._password_hash_function(parts[4].strip())
+            password = usermodule.User()._password_hash_function(parts[4].strip())
             user_data = (first_name , last_name , national_code , birth_date , password)
             users.Insert(national_code ,user_data)
     return users
@@ -122,4 +121,4 @@ def read_plates(filepath='tests/test_plates.txt'):
 #             res += output + '\n'
 #         yield res
     
-# read_city_codes()
+# read_users()

@@ -17,7 +17,7 @@ class User:
         self.lastname = lname
         self.password = password
         self.car_database = read_cars()
-        self.users_database = Trie()
+        self.users_database = read_users
         self.plates_database = read_plates()
         self.citycode_database = Array(100)
         self.drivers_database = read_drivers()
@@ -167,7 +167,7 @@ class User:
             if bst is not None:
                 for node in bst.traverse(bst.root):
                     if node.data.owner == id:
-                        yield str(node.data)
+                        yield str(node.data.number)
         
 #_____phase 3 functionality__________________________________________________
     def show_users_negative_score(self , national_code , driver_id):
